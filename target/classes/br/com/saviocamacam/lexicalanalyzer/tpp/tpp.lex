@@ -19,34 +19,27 @@ private TppToken createToken(String name, String value) {
 %line
 %column
 
-BRANCO = [\n| |\t|\r]
-ID = [_|a-z|A-Z][a-z|A-Z|0-9|_]*
-
-OP = [([)]+*-<>:=<>=,]
-
-INTEIRO = 0|[1-9][0-9]*
-
-program = "program"
+DIGITO = [0-9]
+ACENTUACAO = ãõáéíóúâêôûüç
+INTEIRO = ([-+]?{DIGITO}+)
+LETRA = [a-zA-Z]+
+PR = (se|então|senão|fim|repita|flutuante|retorna|até|leia|escreve|inteiro)
+CT = [{]+[\x20-\x7Fãõáéíóúâêôûüç]+[}]+
+ID = ([a-zA-Zãõáéíóúâêôûüç]([a-zA-Zãõáéíóúâêôûüç]*|[0-9]+)*)
+FLUTUANTE = ({INTEIRO}"."{INTEIRO})
+BRANCO = [\n| |\t|\r]+
+SB = (:=|:|>|\{|\}|\(|\)|\*|=|-|<=|\[|\])
+NUMBER_SN = ((\b[0-9]+)?\.)?\b[0-9]+([eE][-+]?[0-9]+)?\b
 
 %%
-
-"inteiro" { return createToken("PR", yytext()); }
-"principal" { return createToken("PR", yytext()); }
-"se" { return createToken("PR", yytext()); }
-"entao" { return createToken("PR", yytext()); }
-"senao" { return createToken("PR", yytext()); }
-"fim" { return createToken("PR", yytext()); }
-"repita" { return createToken("PR", yytext()); }
-"flutuante" { return createToken("PR", yytext()); }
-"retorna" { return createToken("PR", yytext()); }
-"ate" { return createToken("PR", yytext()); }
-"leia" { return createToken("PR", yytext()); }
-"escreve" { return createToken("PR", yytext()); }
-
-{INTEIRO} { return createToken("inteiro", yytext()); }
-{ID} { return createToken("id", yytext()); }
-{OP} { return createToken("SB", yytext()); }
-{program} { return createToken(yytext(), ""); } 
+{NUMBER_SN} {return createToken("SN", yytext()); }
+{CT} { /**/ }
+{PR} { return createToken("PR", yytext()); }
+{INTEIRO} { return createToken("NUM", yytext()); }
+{ID} { return createToken("ID", yytext()); }
+{SB} { return createToken("SB", yytext()); }
 {BRANCO} { /**/ }
+{FLUTUANTE} {return createToken("NUM", yytext()); }
+
 
 . { throw new RuntimeException("Caractere inválido " + yytext() + " na linha " + yyline + ", coluna " +yycolumn); }

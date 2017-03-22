@@ -11,14 +11,14 @@ public class TppLexicalAnalyzer {
 		String rootPath = Paths.get("").toAbsolutePath(). toString();
         String subPath = "/src/main/java/br/com/saviocamacam/lexicalanalyzer/tpp";
 
-        String sourceCode = rootPath + subPath + "/program.tpp";
+        String sourceCode = rootPath + subPath + "/program_2.tpp";
 
         LexicalAnalyzer lexical = new LexicalAnalyzer(new FileReader(sourceCode));
 
         TppToken token;
-
+        
         while ((token = lexical.yylex()) != null) {
-            System.out.println("<" + token.name + ", " + token.value + "> (" + token.line + " - " + token.column + ")");
+            System.out.println("<" + token.name + ", " + token.value + ">" /*"(" + token.line + " - " + token.column + ")"*/);
         }
 	}
 
